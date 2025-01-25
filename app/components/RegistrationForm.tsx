@@ -3,6 +3,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { Scanner } from "@yudiel/react-qr-scanner";
+import { QrCode } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -24,11 +34,14 @@ import {
 const formSchema = z.object({
   device_name: z.string(),
   location: z.string(),
-  device_id: z.string().min(1, "Please select a device ID"),
+  device_id: z.string(),
 });
 
 const RegistrationForm = () => {
   const deviceIds = ["DEVICE-001", "DEVICE-002", "DEVICE-003", "DEVICE-004"];
+  const [isQrScanned, setIsQrScanned] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [scannedValue, setScannedValue] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,11 +50,30 @@ const RegistrationForm = () => {
       location: "",
       device_id: "",
     },
+    shouldUnregister: false, // Prevent field unregistering
   });
+
+  // Keep track of scanned value
+  useEffect(() => {
+    if (scannedValue) {
+      form.setValue("device_id", scannedValue, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [scannedValue, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
+
+  const handleQrScan = (result: string | null) => {
+    if (result) {
+      setScannedValue(result);
+      setIsQrScanned(true);
+      setIsDialogOpen(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto p-6">
@@ -53,31 +85,74 @@ const RegistrationForm = () => {
           <FormField
             control={form.control}
             name="device_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-semibold">
-                  Device ID
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a device ID" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {deviceIds.map((id) => (
-                      <SelectItem key={id} value={id}>
-                        {id}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              console.log("Field value:", field.value); // Debug log
+              return (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-sm font-semibold">
+                      Device ID
+                    </FormLabel>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="icon" type="button">
+                          <QrCode className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="w-fit h-fit">
+                        <DialogHeader>
+                          <DialogTitle>Scan QR Code</DialogTitle>
+                        </DialogHeader>
+
+                        <Scanner
+                          onScan={(result) => {
+                            if (result) {
+                              handleQrScan(result[0].rawValue);
+                            }
+                          }}
+                          styles={{
+                            container: {
+                              width: "400px",
+                              height: "400px",
+                            },
+                            video: {
+                              width: "400px",
+                              height: "400px",
+                              objectFit: "contain",
+                            },
+                          }}
+                          allowMultiple={false}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <Select
+                    value={field.value || scannedValue}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setScannedValue(value);
+                    }}
+                    disabled={isQrScanned}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue>
+                          {field.value || "Select a device ID"}
+                        </SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {deviceIds.map((id) => (
+                        <SelectItem key={id} value={id}>
+                          {id}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <FormField
             control={form.control}
