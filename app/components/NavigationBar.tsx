@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,7 @@ import RegistrationForm from "./RegistrationForm";
 const NavigationBar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-4 bg-white border-b z-50">
-      <div className="flex items-center">
+      <Link href="/" className="flex items-center">
         <Image
           src="/logo.svg"
           alt="AQSentinel Logo"
@@ -23,7 +24,7 @@ const NavigationBar = () => {
           className="mr-2"
         />
         <h1 className="text-xl font-bold">AQSentinel</h1>
-      </div>
+      </Link>
       <div className="flex items-center space-x-4">
         <Dialog>
           <DialogTrigger asChild>

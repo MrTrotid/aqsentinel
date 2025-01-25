@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link"; // Add this import
 import RegistrationForm from "./components/RegistrationForm";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,44 +82,50 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDevices.map((device) => (
-            <Card key={device.device_id}>
-              <CardHeader>
-                <CardTitle>{device.device_name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p>
-                    <span className="font-semibold">Device ID:</span>{" "}
-                    {device.device_id}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Location:</span>{" "}
-                    {device.location}
-                  </p>
-                  <div className="mt-4">
-                    <p className="font-semibold mb-2">Current Readings:</p>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="text-center p-2 bg-gray-100 rounded">
-                        <p className="text-sm text-gray-600">Temperature</p>
-                        <p className="font-medium">
-                          {device.metadata.temperature}
-                        </p>
-                      </div>
-                      <div className="text-center p-2 bg-gray-100 rounded">
-                        <p className="text-sm text-gray-600">Humidity</p>
-                        <p className="font-medium">
-                          {device.metadata.humidity}
-                        </p>
-                      </div>
-                      <div className="text-center p-2 bg-gray-100 rounded">
-                        <p className="text-sm text-gray-600">AQI</p>
-                        <p className="font-medium">{device.metadata.aqi}</p>
+            <Link
+              href={`/stats/${device.device_id}`}
+              key={device.device_id}
+              className="block transition-transform hover:scale-105"
+            >
+              <Card className="mb-4">
+                <CardContent className="p-6">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold">
+                      {device.device_name}
+                    </h3>
+                    <p>
+                      <span className="font-semibold">Device ID:</span>{" "}
+                      {device.device_id}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Location:</span>{" "}
+                      {device.location}
+                    </p>
+                    <div className="mt-4">
+                      <p className="font-semibold mb-2">Current Readings:</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="text-center p-2 bg-gray-100 rounded">
+                          <p className="text-sm text-gray-600">Temperature</p>
+                          <p className="font-medium">
+                            {device.metadata.temperature}
+                          </p>
+                        </div>
+                        <div className="text-center p-2 bg-gray-100 rounded">
+                          <p className="text-sm text-gray-600">Humidity</p>
+                          <p className="font-medium">
+                            {device.metadata.humidity}
+                          </p>
+                        </div>
+                        <div className="text-center p-2 bg-gray-100 rounded">
+                          <p className="text-sm text-gray-600">AQI</p>
+                          <p className="font-medium">{device.metadata.aqi}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
