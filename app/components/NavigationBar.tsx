@@ -13,12 +13,12 @@ import RegistrationForm from "./RegistrationForm";
 
 const NavigationBar = () => {
   return (
-    <nav className="flex items-center justify-between p-4 bg-white border-b">
+    <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-4 bg-white border-b z-50">
       <div className="flex items-center">
-        <Image 
-          src="/logo.svg" 
-          alt="AQSentinel Logo" 
-          width={75} 
+        <Image
+          src="/logo.svg"
+          alt="AQSentinel Logo"
+          width={75}
           height={75}
           className="mr-2"
         />
