@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,13 @@ const NavigationBar = () => {
   return (
     <nav className="flex items-center justify-between p-4 bg-white border-b">
       <div className="flex items-center">
+        <Image 
+          src="/logo.svg" 
+          alt="AQSentinel Logo" 
+          width={75} 
+          height={75}
+          className="mr-2"
+        />
         <h1 className="text-xl font-bold">AQSentinel</h1>
       </div>
       <div className="flex items-center space-x-4">
