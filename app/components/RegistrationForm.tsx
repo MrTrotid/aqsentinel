@@ -50,10 +50,9 @@ const RegistrationForm = () => {
       location: "",
       device_id: "",
     },
-    shouldUnregister: false, // Prevent field unregistering
+    shouldUnregister: false,
   });
 
-  // Keep track of scanned value
   useEffect(() => {
     if (scannedValue) {
       form.setValue("device_id", scannedValue, {
@@ -62,6 +61,10 @@ const RegistrationForm = () => {
       });
     }
   }, [scannedValue, form]);
+
+  useEffect(() => {
+    console.log(form.getValues("device_id"));
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -86,7 +89,9 @@ const RegistrationForm = () => {
             control={form.control}
             name="device_id"
             render={({ field }) => {
-              console.log("Field value:", field.value); // Debug log
+              if (field.value == "") {
+                field.value = scannedValue;
+              }
               return (
                 <FormItem>
                   <div className="flex items-center justify-between">
