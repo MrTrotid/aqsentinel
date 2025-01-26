@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Image from "next/image";
+import Link from "next/link";
 import RegistrationForm from "./RegistrationForm";
 
 const NavigationBar = () => {

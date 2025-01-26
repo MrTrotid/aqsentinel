@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
 import {
-  LineChart,
+  Legend,
   Line,
-  BarChart,
-  Bar,
+  LineChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
 } from "recharts";
-import { format } from "date-fns";
 
 interface PageProps {
   params: Promise<{
