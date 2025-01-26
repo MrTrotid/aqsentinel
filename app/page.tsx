@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link"; // Add this import
-import RegistrationForm from "./components/RegistrationForm";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Device {
   device_name: string;

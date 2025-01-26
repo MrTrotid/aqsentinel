@@ -4,8 +4,6 @@ import React, { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   ResponsiveContainer,
   XAxis,
   YAxis,
@@ -13,6 +11,8 @@ import {
   Legend,
 } from "recharts";
 import { format } from "date-fns";
+import { generateToken, messaging } from "@/app/firebase/clientApp";
+import { onMessage } from "firebase/messaging";
 
 interface PageProps {
   params: Promise<{
@@ -43,7 +43,7 @@ const generateTimeData = () => {
   const now = new Date();
   return Array.from({ length: 30 }, (_, i) => {
     const time = new Date(now.getTime() - (29 - i) * 1000);
-    return format(time, "mm:ss");
+    return format(time, "hh:mm:ss");
   });
 };
 
@@ -79,6 +79,15 @@ const deviceData = {
 };
 
 export default function StatsPage({ params }: PageProps) {
+  useEffect(() => {
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log("reached");
+
+      console.log("Message received. ", payload);
+    });
+  }, []);
+
   const unwrappedParams = React.use(params);
   const [temperatureData, setTemperatureData] = useState(
     deviceData.hourlyReadings
@@ -91,7 +100,7 @@ export default function StatsPage({ params }: PageProps) {
   useEffect(() => {
     const intervals = [
       setInterval(() => {
-        const newTime = format(new Date(), "mm:ss");
+        const newTime = format(new Date(), "hh:mm:ss");
 
         // Update temperature
         setTemperatureData((prev) => {
@@ -110,7 +119,7 @@ export default function StatsPage({ params }: PageProps) {
       }, 5000),
 
       setInterval(() => {
-        const newTime = format(new Date(), "mm:ss");
+        const newTime = format(new Date(), "hh:mm:ss");
 
         // Update humidity
         setHumidityData((prev) => {
@@ -129,7 +138,7 @@ export default function StatsPage({ params }: PageProps) {
       }, 5000),
 
       setInterval(() => {
-        const newTime = format(new Date(), "mm:ss");
+        const newTime = format(new Date(), "hh:mm:ss");
 
         // Update AQI
         setAqiData((prev) => {
@@ -148,7 +157,7 @@ export default function StatsPage({ params }: PageProps) {
       }, 5000),
 
       setInterval(() => {
-        const newTime = format(new Date(), "mm:ss");
+        const newTime = format(new Date(), "hh:mm:ss");
 
         // Update gases
         setGasData((prev) => {
